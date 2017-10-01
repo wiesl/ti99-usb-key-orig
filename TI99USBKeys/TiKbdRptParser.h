@@ -41,14 +41,14 @@ class TiKbdRptParser : public KeyboardReportParser
 
   public:
     TiKbdRptParser();
-    void setKeyLocks(HID* hid, boolean numLock, boolean capsLock, boolean scrollLock);
+    void setKeyLocks(USBHID* hid, boolean numLock, boolean capsLock, boolean scrollLock);
 };
 
 TiKbdRptParser::TiKbdRptParser()
 {
 }
 
-void TiKbdRptParser::setKeyLocks(HID* hid, boolean numLock, boolean capsLock, boolean scrollLock)
+void TiKbdRptParser::setKeyLocks(USBHID* hid, boolean numLock, boolean capsLock, boolean scrollLock)
 { 
   if (numLock) {
     kbdLockingKeys.kbdLeds.bmNumLock = 1;
@@ -437,4 +437,5 @@ boolean TiKbdRptParser::handleNumpad(uint8_t key, int state)
 }
 
 #endif
+
 

@@ -1,6 +1,14 @@
 #ifndef _TI_KBD_RPT_PARSER_H
 #define _TI_KBD_RPT_PARSER_H
 
+#ifndef USB_USE_OLD_API
+// New API (V1.3.0 or newer)
+#define USB_HID_CLASS USBHID
+#else
+// Old API (V1.2.1)
+#define USB_HID_CLASS HID
+#endif
+
 #include <hidboot.h>
 
 #include "USBCodes.h"
@@ -41,14 +49,14 @@ class TiKbdRptParser : public KeyboardReportParser
 
   public:
     TiKbdRptParser();
-    void setKeyLocks(USBHID* hid, boolean numLock, boolean capsLock, boolean scrollLock);
+    void setKeyLocks(USB_HID_CLASS* hid, boolean numLock, boolean capsLock, boolean scrollLock);
 };
 
 TiKbdRptParser::TiKbdRptParser()
 {
 }
 
-void TiKbdRptParser::setKeyLocks(USBHID* hid, boolean numLock, boolean capsLock, boolean scrollLock)
+void TiKbdRptParser::setKeyLocks(USB_HID_CLASS* hid, boolean numLock, boolean capsLock, boolean scrollLock)
 { 
   if (numLock) {
     kbdLockingKeys.kbdLeds.bmNumLock = 1;

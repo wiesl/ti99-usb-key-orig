@@ -1,5 +1,5 @@
 #define DEBUG_USB_PRINTING
-#define DEBUG_PRINTING
+#define DEBUG_SERIAL
 //#define USB_USE_OLD_API
 
 #ifndef USB_USE_OLD_API
@@ -24,28 +24,13 @@
 #include <SPI.h>
 #endif
 
-#ifdef DEBUG_PRINTING
-#define DEBUG_PRINT(s)    do { Serial.print(s); Serial.send_now(); } while( false )
-#define DEBUG_PRINTLN(s)    do { Serial.println(s); Serial.send_now(); } while( false )
-#define DEBUG_PRINT_HEX(hex)    do { Serial.print(hex, HEX); Serial.send_now(); } while( false )
-#define DEBUG_PRINT_HEXLN(hex)    do { Serial.println(hex, HEX); Serial.send_now(); } while( false )
-#define DEBUG_DELAY(t)    do { delay(t); } while( false )
-#else
-#define DEBUG_PRINT(s)        /* Don't do anything in release builds */
-#define DEBUG_PRINTLN(s)        /* Don't do anything in release builds */
-#define DEBUG_PRINT_HEX(hex)  /* Don't do anything in release builds */
-#define DEBUG_PRINT_HEXLN(hex)  /* Don't do anything in release builds */
-#define DEBUG_DELAY(t)  /* Don't do anything in release builds */
-#endif
-
-// Reboot support
-#define CPU_RESTART_ADDR (uint32_t *)0xE000ED0C
-#define CPU_RESTART_VAL 0x5FA0004
-#define CPU_RESTART (*CPU_RESTART_ADDR = CPU_RESTART_VAL);
-
 #define NUMLOCK_STARTUP true
 #define CAPSLOCK_STARTUP true
 #define SCROLLLOCK_STARTUP false
+
+#include "DebugSerial.h"
+
+#include "teensy_reboot_support.h"
 
 #include "TiPins.h"
 
@@ -169,7 +154,7 @@ void loop()
     //if ((loopMillis - lastGoodState) > 5000) {
     if ((loopMillis - lastGoodState) > 10000) { 
       DEBUG_PRINTLN("CPU_RESTART");
-      DEBUG_DELAY(1000);
+      DEBUG_DELAYMS(1000);
       CPU_RESTART;
     }
   } else {

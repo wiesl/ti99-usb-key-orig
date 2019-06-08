@@ -47,7 +47,6 @@ HIDBoot<USB_HID_PROTCOL_KEYBOARD_CLASS>    HidKeyboard(&Usb);
 TiKbdRptParser Prs;
 
 long lastGoodState;
-long firstBoot;
 
 // Pin 13 has an LED connected on most Arduino boards.
 // Pin 11 has the LED on Teensy 2.0
@@ -82,7 +81,6 @@ void setup()
   //initialLEDblink();
 
   lastGoodState = millis();
-  firstBoot = 1;
   
   initData();
 
@@ -141,6 +139,7 @@ inline void print_usb_state_change(uint8_t state)
 
 void loop()
 {
+  static bool firstBoot = true;
   static bool firstLoop = true;
   if (firstLoop) DEBUG_PRINTLN("loop() begin");
   // Read USB input which updates the state of the in-memory keyboard matrix.
@@ -159,11 +158,11 @@ void loop()
     }
   } else {
     lastGoodState = loopMillis;
-    if (firstBoot != 0) {
+    if (firstBoot) {
       DEBUG_PRINTLN("Prs.setKeyLocks()");
       // Set numlock and capslock on, leave scroll lock off.
       Prs.setKeyLocks(&HidKeyboard, NUMLOCK_STARTUP, CAPSLOCK_STARTUP, SCROLLLOCK_STARTUP);
-      firstBoot = 0; 
+      firstBoot = false;
       gpioSetup();
     }
   }
